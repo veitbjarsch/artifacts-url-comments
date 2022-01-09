@@ -51,8 +51,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addCommentToPullAndIssues = void 0;
 const useOctokit_1 = __nccwpck_require__(9703);
 const core = __importStar(__nccwpck_require__(1460));
-const inputHelpers_1 = __nccwpck_require__(5167);
-const getPullRequestIssuesActionWorker_1 = __nccwpck_require__(2900);
 const github_1 = __nccwpck_require__(5884);
 function addCommentToPullAndIssues(pullRequest, commentStr) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -64,16 +62,22 @@ function addCommentToPullAndIssues(pullRequest, commentStr) {
             if (addTo === 'pull' || addTo === 'pullandissues') {
                 issueNumbers.push(pullRequest.number);
             }
-            if (addTo === 'issues' || addTo === 'pullandissues') {
-                inputHelpers_1.setInput('pullRequest', JSON.stringify({ pull_request: pullRequest }));
-                issueNumbers = issueNumbers.concat(yield getPullRequestIssuesActionWorker_1.getPullRequestIssuesActionWorker());
-            }
+            // if (addTo === 'issues' || addTo === 'pullandissues') {
+            //   setInput('pullRequest', JSON.stringify({pull_request: pullRequest}))
+            //   issueNumbers = issueNumbers.concat(
+            //     await getPullRequestIssuesActionWorker()
+            //   )
+            // }
             const commentIds = [];
+            core.debug(`for before`);
             for (const issueNumber of issueNumbers) {
+                core.debug(`createComment before`);
                 const { data: comment } = yield octokit.issues.createComment(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: issueNumber, body: commentStr }));
+                core.debug(`createComment after`);
                 commentIds.push(comment.id);
                 core.info(`Created comment id '${comment.id}' on issue '${issueNumber}'.`);
             }
+            core.debug(`for after`);
             core.setOutput('commentIds', commentIds);
         }));
     });
