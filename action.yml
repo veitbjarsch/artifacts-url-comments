@@ -69,7 +69,7 @@ outputs:
   commentIds:
     description: ids of created comments 
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   icon: 'link'
