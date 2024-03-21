@@ -1,2 +1,2 @@
-import {workflowArtifactsPullRequestCommentAction} from '@tonyhallett/github-actions'
+import {workflowArtifactsPullRequestCommentAction} from './workflow/artifacts/pull-request-comment-action'
 workflowArtifactsPullRequestCommentAction()
